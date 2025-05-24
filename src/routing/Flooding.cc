@@ -17,13 +17,20 @@
 
 Define_Module(Flooding);
 
-const simsignalwrap_t Flooding::mobilityStateChangedSignal = simsignalwrap_t(MIXIM_SIGNAL_MOBILITY_CHANGE_NAME);
-
 void Flooding::initialize(int stage)
 {
     DemoBaseApplLayer::initialize(stage);
 
     if (stage == 0) {
+
+        cModule* mobility = getParentModule()->getSubmodule("mobility");
+        if (mobility){
+            mobility->subscribe(inet::MobilityBase::mobilityStateChangedSignal, this);
+        }
+        else {
+            EV_ERROR << "Mobility module not found!\n";
+        }
+
         traci = veins::TraCIMobilityAccess().get(getParentModule());
 
         //TODO: Added for Game Theory Solution

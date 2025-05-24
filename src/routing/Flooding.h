@@ -82,8 +82,6 @@ protected:
 
     long totalCollisions;
 
-    static const simsignalwrap_t mobilityStateChangedSignal;
-
     veins::TraCIMobility* traci;
 
     // Used by the back-traffic application. Every time a node receives a beacon that has not been received in the last 3 seconds, then

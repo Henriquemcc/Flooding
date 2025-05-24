@@ -14,15 +14,23 @@
 // 
 
 #include "RSUApplication.h"
+#include "veins/veins.h"
 
 Define_Module(RSUApplication);
-
-const simsignalwrap_t RSUApplication::mobilityStateChangedSignal = simsignalwrap_t(MIXIM_SIGNAL_MOBILITY_CHANGE_NAME);
 
 void RSUApplication::initialize(int stage) {
     BaseWaveApplLayer::initialize(stage);
 
     if (stage == 0) {
+
+        cModule* mobility = getParentModule()->getSubmodule("mobility");
+        if (mobility){
+            mobility->subscribe(inet::MobilityBase::mobilityStateChangedSignal, this);
+        }
+        else {
+            EV_ERROR << "Mobility module not found!\n";
+        }
+
         if (par("sendData").boolValue()) {
             datarate = par("datarate").doubleValue();
             disseminationStarted = false;
@@ -48,7 +56,7 @@ void RSUApplication::finish() {
     std::ofstream log;
     std::ostringstream o;
 
-    o << "./results/" << par("log_traffic").longValue() << "-" << par("log_replication").longValue() << "-sender";
+    o << "./results/" << par("log_traffic") << "-" << par("log_replication") << "-sender";
     log.open(o.str().c_str());
 
     for (std::map<simtime_t, MessageEntryInfo*>::iterator i = loggingInfo.begin(); i != loggingInfo.end(); i++) {
@@ -85,7 +93,7 @@ void RSUApplication::handleSelfMsg(cMessage* msg) {
     }
 }
 
-void RSUApplication::onBeacon(WaveShortMessage* wsm) {
+void RSUApplication::onBeacon(BaseFrame1609_4* wsm) {
     if (!disseminationStarted && simTime() >= par("startDataProductionTime")) {
         emit(disseminationStartTime, simTime());
         disseminationStarted = true;
@@ -95,14 +103,14 @@ void RSUApplication::onBeacon(WaveShortMessage* wsm) {
     }
 }
 
-void RSUApplication::onData(WaveShortMessage* wsm) {}
+void RSUApplication::onData(BaseFrame1609_4* wsm) {}
 
 void RSUApplication::sendData() {
     if (outputQueue.size() != 0) {
         MessageEntryInfo* videoInfo = outputQueue.front();
         outputQueue.pop_front();
 
-        WaveShortMessage* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, videoInfo->ID);
+        BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, videoInfo->ID);
 
         // Send first message
         DataMessage* dataMsg = new DataMessage("data");
@@ -146,10 +154,10 @@ void RSUApplication::readDataFromFile() {
         outputQueue.push_back(videoInfo);
     }*/
 
-    for (int ID = 1; ID <= par("numberPackets").longValue(); ID++) {
+    for (int ID = 1; ID <= par("numberPackets"); ID++) {
         MessageEntryInfo* videoInfo = new MessageEntryInfo;
         videoInfo->ID = ID;
-        videoInfo->length = par("packetSize").longValue();
+        videoInfo->length = par("packetSize");
 
         outputQueue.push_back(videoInfo);
     }

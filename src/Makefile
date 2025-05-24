@@ -2,66 +2,59 @@
 # OMNeT++/OMNEST Makefile for Flooding
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -I../../veins/src -I../../veins/src/veins/base/utils -I../../veins/src/veins/modules/application/ieee80211p -I../../veins/src/veins/modules/mac/ieee80211p -I../../veins/src/veins/modules/phy -I../../veins/src/veins/modules/messages -I../../veins/src/veins/modules/mobility/traci -I../../veins/src/veins/base/phyLayer -L../../veins/out/$$\(CONFIGNAME\)/src -lveins -KVEINS_PROJ=../../veins
+#  opp_makemake -f --deep -KVEINS_PROJ=../../veins -KINET_PROJ=../../inet -DVEINS_IMPORT -L$$\(VEINS_PROJ\)/src -lveins$$\(D\)
 #
 
 # Name of target to be created (-o option)
-TARGET = Flooding$(EXE_SUFFIX)
+TARGET_DIR = .
+TARGET_NAME = Flooding$(D)
+TARGET = $(TARGET_NAME)$(EXE_SUFFIX)
+TARGET_IMPLIB = $(TARGET_NAME)$(IMPLIB_SUFFIX)
+TARGET_IMPDEF = $(TARGET_NAME)$(IMPDEF_SUFFIX)
+TARGET_FILES = $(TARGET_DIR)/$(TARGET)
 
 # User interface (uncomment one) (-u option)
-USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(CMDENV_LIBS)
+USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
 #USERIF_LIBS = $(CMDENV_LIBS)
 #USERIF_LIBS = $(TKENV_LIBS)
+#USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = \
-    -I../../veins/src \
-    -I../../veins/src/veins/base/utils \
-    -I../../veins/src/veins/modules/application/ieee80211p \
-    -I../../veins/src/veins/modules/mac/ieee80211p \
-    -I../../veins/src/veins/modules/phy \
-    -I../../veins/src/veins/modules/messages \
-    -I../../veins/src/veins/modules/mobility/traci \
-    -I../../veins/src/veins/base/phyLayer \
-    -I. \
-    -Imessages \
-    -Irouting \
-    -Irsu
+INCLUDE_PATH =
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = -L../../veins/out/$(CONFIGNAME)/src  -lveins
-LIBS += -Wl,-rpath,`abspath ../../veins/out/$(CONFIGNAME)/src`
+LIBS = $(LDFLAG_LIBPATH)$(VEINS_PROJ)/src  -lveins$(D)
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
 PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
-# Object files for local .cc and .msg files
+# Object files for local .cc, .msg and .sm files
 OBJS = $O/routing/Flooding.o $O/rsu/RSUApplication.o $O/messages/DataMessage_m.o
 
 # Message files
 MSGFILES = \
     messages/DataMessage.msg
 
+# SM files
+SMFILES =
+
 # Other makefile variables (-K)
 VEINS_PROJ=../../veins
+INET_PROJ=../../inet
 
 #------------------------------------------------------------------------------
 
-# Pull in OMNeT++ configuration (Makefile.inc or configuser.vc)
+# Pull in OMNeT++ configuration (Makefile.inc)
 
 ifneq ("$(OMNETPP_CONFIGFILE)","")
 CONFIGFILE = $(OMNETPP_CONFIGFILE)
 else
-ifneq ("$(OMNETPP_ROOT)","")
-CONFIGFILE = $(OMNETPP_ROOT)/Makefile.inc
-else
 CONFIGFILE = $(shell opp_configfilepath)
-endif
 endif
 
 ifeq ("$(wildcard $(CONFIGFILE))","")
@@ -71,168 +64,81 @@ endif
 include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
-OMNETPP_LIB_SUBDIR = $(OMNETPP_LIB_DIR)/$(TOOLCHAIN_NAME)
-OMNETPP_LIBS = -L"$(OMNETPP_LIB_SUBDIR)" -L"$(OMNETPP_LIB_DIR)" -loppmain$D $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
+OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
+ifneq ($(PLATFORM),win32.x86_64)
+LIBS += -Wl,-rpath,$(abspath $(VEINS_PROJ)/src)
+endif
 
-COPTS = $(CFLAGS)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
+COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DVEINS_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
+SMCOPTS =
 
 # we want to recompile everything if COPTS changes,
-# so we store COPTS into $COPTS_FILE and have object
-# files depend on it (except when "make depend" was called)
+# so we store COPTS into $COPTS_FILE (if COPTS has changed since last build)
+# and make the object files depend on it
 COPTS_FILE = $O/.last-copts
-ifneq ($(MAKECMDGOALS),depend)
 ifneq ("$(COPTS)","$(shell cat $(COPTS_FILE) 2>/dev/null || echo '')")
-$(shell $(MKPATH) "$O" && echo "$(COPTS)" >$(COPTS_FILE))
-endif
+  $(shell $(MKPATH) "$O")
+  $(file >$(COPTS_FILE),$(COPTS))
 endif
 
 #------------------------------------------------------------------------------
 # User-supplied makefile fragment(s)
-# >>>
-# <<<
+-include makefrag
+
 #------------------------------------------------------------------------------
 
 # Main target
-all: $O/$(TARGET)
-	$(Q)$(LN) $O/$(TARGET) .
+all: $(TARGET_FILES)
 
-$O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile
+$(TARGET_DIR)/% :: $O/%
+	@mkdir -p $(TARGET_DIR)
+	$(Q)$(LN) $< $@
+ifeq ($(TOOLCHAIN_NAME),clang-msabi)
+	-$(Q)-$(LN) $(<:%.dll=%.lib) $(@:%.dll=%.lib) 2>/dev/null
+endif
+
+$O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
 	@echo Creating executable: $@
-	$(Q)$(CXX) $(LDFLAGS) -o $O/$(TARGET)  $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS)
+	$(Q)$(CXX) $(LDFLAGS) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS)
 
-.PHONY: all clean cleanall depend msgheaders
+.PHONY: all clean cleanall depend msgheaders smheaders
 
 .SUFFIXES: .cc
 
-$O/%.o: %.cc $(COPTS_FILE)
+$O/%.o: %.cc $(COPTS_FILE) | msgheaders smheaders
 	@$(MKPATH) $(dir $@)
 	$(qecho) "$<"
 	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) -o $@ $<
 
 %_m.cc %_m.h: %.msg
 	$(qecho) MSGC: $<
-	$(Q)$(MSGC) -s _m.cc $(MSGCOPTS) $?
+	$(Q)$(MSGC) -s _m.cc -MD -MP -MF $O/$(basename $<)_m.h.d $(MSGCOPTS) $?
+
+%_sm.cc %_sm.h: %.sm
+	$(qecho) SMC: $<
+	$(Q)$(SMC) -c++ -suffix cc $(SMCOPTS) $?
 
 msgheaders: $(MSGFILES:.msg=_m.h)
 
-clean:
-	$(qecho) Cleaning...
-	$(Q)-rm -rf $O
-	$(Q)-rm -f Flooding Flooding.exe libFlooding.so libFlooding.a libFlooding.dll libFlooding.dylib
-	$(Q)-rm -f ./*_m.cc ./*_m.h
-	$(Q)-rm -f messages/*_m.cc messages/*_m.h
-	$(Q)-rm -f routing/*_m.cc routing/*_m.h
-	$(Q)-rm -f rsu/*_m.cc rsu/*_m.h
+smheaders: $(SMFILES:.sm=_sm.h)
 
-cleanall: clean
+clean:
+	$(qecho) Cleaning $(TARGET)
+	$(Q)-rm -rf $O
+	$(Q)-rm -f $(TARGET_FILES)
+	$(Q)-rm -f $(call opp_rwildcard, . , *_m.cc *_m.h *_sm.cc *_sm.h)
+
+cleanall:
+	$(Q)$(CLEANALL_COMMAND)
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
-depend:
-	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES)  ./*.cc messages/*.cc routing/*.cc rsu/*.cc
+help:
+	@echo "$$HELP_SYNOPSYS"
+	@echo "$$HELP_TARGETS"
+	@echo "$$HELP_VARIABLES"
+	@echo "$$HELP_EXAMPLES"
 
-# DO NOT DELETE THIS LINE -- make depend depends on it.
-$O/messages/DataMessage_m.o: messages/DataMessage_m.cc \
-	messages/DataMessage_m.h \
-	$(VEINS_PROJ)/src/veins/base/utils/Coord.h \
-	$(VEINS_PROJ)/src/veins/base/utils/FWMath.h \
-	$(VEINS_PROJ)/src/veins/base/utils/MiXiMDefs.h \
-	$(VEINS_PROJ)/src/veins/base/utils/miximkerneldefs.h
-$O/routing/Flooding.o: routing/Flooding.cc \
-	messages/DataMessage_m.h \
-	routing/Flooding.h \
-	$(VEINS_PROJ)/src/veins/base/connectionManager/BaseConnectionManager.h \
-	$(VEINS_PROJ)/src/veins/base/connectionManager/ChannelAccess.h \
-	$(VEINS_PROJ)/src/veins/base/connectionManager/NicEntry.h \
-	$(VEINS_PROJ)/src/veins/base/messages/AirFrame_m.h \
-	$(VEINS_PROJ)/src/veins/base/messages/ChannelSenseRequest_m.h \
-	$(VEINS_PROJ)/src/veins/base/messages/MacPkt_m.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseApplLayer.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseBattery.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseLayer.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseMacLayer.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseMobility.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseModule.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseWorldUtility.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BatteryAccess.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/AnalogueModel.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/BaseDecider.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/BasePhyLayer.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/ChannelInfo.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/ChannelState.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/Decider.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/DeciderToPhyInterface.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/Interpolation.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/MacToPhyControlInfo.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/MacToPhyInterface.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/Mapping.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/MappingBase.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/MappingUtils.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/PhyToMacControlInfo.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/PhyUtils.h \
-	$(VEINS_PROJ)/src/veins/base/phyLayer/Signal_.h \
-	$(VEINS_PROJ)/src/veins/base/utils/Coord.h \
-	$(VEINS_PROJ)/src/veins/base/utils/FWMath.h \
-	$(VEINS_PROJ)/src/veins/base/utils/FindModule.h \
-	$(VEINS_PROJ)/src/veins/base/utils/HostState.h \
-	$(VEINS_PROJ)/src/veins/base/utils/MiXiMDefs.h \
-	$(VEINS_PROJ)/src/veins/base/utils/Move.h \
-	$(VEINS_PROJ)/src/veins/base/utils/NetwToMacControlInfo.h \
-	$(VEINS_PROJ)/src/veins/base/utils/PassedMessage.h \
-	$(VEINS_PROJ)/src/veins/base/utils/SimpleAddress.h \
-	$(VEINS_PROJ)/src/veins/base/utils/miximkerneldefs.h \
-	$(VEINS_PROJ)/src/veins/modules/analogueModel/JakesFading.h \
-	$(VEINS_PROJ)/src/veins/modules/analogueModel/LogNormalShadowing.h \
-	$(VEINS_PROJ)/src/veins/modules/analogueModel/SimplePathlossModel.h \
-	$(VEINS_PROJ)/src/veins/modules/application/ieee80211p/BaseWaveApplLayer.h \
-	$(VEINS_PROJ)/src/veins/modules/mac/ieee80211p/Mac1609_4.h \
-	$(VEINS_PROJ)/src/veins/modules/mac/ieee80211p/Mac80211pToPhy11pInterface.h \
-	$(VEINS_PROJ)/src/veins/modules/mac/ieee80211p/WaveAppToMac1609_4Interface.h \
-	$(VEINS_PROJ)/src/veins/modules/messages/Mac80211Pkt_m.h \
-	$(VEINS_PROJ)/src/veins/modules/messages/PhyControlMessage_m.h \
-	$(VEINS_PROJ)/src/veins/modules/messages/WaveShortMessage_m.h \
-	$(VEINS_PROJ)/src/veins/modules/mobility/traci/TraCIBuffer.h \
-	$(VEINS_PROJ)/src/veins/modules/mobility/traci/TraCIColor.h \
-	$(VEINS_PROJ)/src/veins/modules/mobility/traci/TraCICommandInterface.h \
-	$(VEINS_PROJ)/src/veins/modules/mobility/traci/TraCIConnection.h \
-	$(VEINS_PROJ)/src/veins/modules/mobility/traci/TraCICoord.h \
-	$(VEINS_PROJ)/src/veins/modules/mobility/traci/TraCIMobility.h \
-	$(VEINS_PROJ)/src/veins/modules/mobility/traci/TraCIScenarioManager.h \
-	$(VEINS_PROJ)/src/veins/modules/obstacle/Obstacle.h \
-	$(VEINS_PROJ)/src/veins/modules/obstacle/ObstacleControl.h \
-	$(VEINS_PROJ)/src/veins/modules/phy/Decider80211p.h \
-	$(VEINS_PROJ)/src/veins/modules/phy/Decider80211pToPhy80211pInterface.h \
-	$(VEINS_PROJ)/src/veins/modules/phy/DeciderResult80211.h \
-	$(VEINS_PROJ)/src/veins/modules/phy/PhyLayer80211p.h \
-	$(VEINS_PROJ)/src/veins/modules/phy/SNRThresholdDecider.h \
-	$(VEINS_PROJ)/src/veins/modules/utility/Consts80211p.h \
-	$(VEINS_PROJ)/src/veins/modules/utility/ConstsPhy.h \
-	$(VEINS_PROJ)/src/veins/modules/world/annotations/AnnotationManager.h
-$O/rsu/RSUApplication.o: rsu/RSUApplication.cc \
-	messages/DataMessage_m.h \
-	rsu/RSUApplication.h \
-	$(VEINS_PROJ)/src/veins/base/connectionManager/ChannelAccess.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseApplLayer.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseBattery.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseLayer.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseMobility.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseModule.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BaseWorldUtility.h \
-	$(VEINS_PROJ)/src/veins/base/modules/BatteryAccess.h \
-	$(VEINS_PROJ)/src/veins/base/utils/Coord.h \
-	$(VEINS_PROJ)/src/veins/base/utils/FWMath.h \
-	$(VEINS_PROJ)/src/veins/base/utils/FindModule.h \
-	$(VEINS_PROJ)/src/veins/base/utils/HostState.h \
-	$(VEINS_PROJ)/src/veins/base/utils/MiXiMDefs.h \
-	$(VEINS_PROJ)/src/veins/base/utils/Move.h \
-	$(VEINS_PROJ)/src/veins/base/utils/NetwToMacControlInfo.h \
-	$(VEINS_PROJ)/src/veins/base/utils/PassedMessage.h \
-	$(VEINS_PROJ)/src/veins/base/utils/SimpleAddress.h \
-	$(VEINS_PROJ)/src/veins/base/utils/miximkerneldefs.h \
-	$(VEINS_PROJ)/src/veins/modules/application/ieee80211p/BaseWaveApplLayer.h \
-	$(VEINS_PROJ)/src/veins/modules/mac/ieee80211p/WaveAppToMac1609_4Interface.h \
-	$(VEINS_PROJ)/src/veins/modules/messages/WaveShortMessage_m.h \
-	$(VEINS_PROJ)/src/veins/modules/utility/Consts80211p.h
-
+# include all dependencies
+-include $(OBJS:%=%.d) $(MSGFILES:%.msg=$O/%_m.h.d)

@@ -13,11 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __FLOODING_FLOODING_H_
-#define __FLOODING_FLOODING_H_
+#pragma once
 
-#include "BaseWaveApplLayer.h"
-#include "WaveShortMessage_m.h"
+#include "veins/veins.h"
+#include "DemoBaseApplLayer.h"
+#include "BaseFrame1609_4_m.h"
 #include "DataMessage_m.h"
 #include "TraCIMobility.h"
 #include <algorithm>
@@ -95,20 +95,20 @@ protected:
     virtual void initialize(int stage);
     virtual void finish();
     virtual void handleSelfMsg(cMessage* msg);
-    virtual void onBeacon(WaveShortMessage* wsm);
-    virtual void onData(WaveShortMessage* wsm);
+    virtual void onBeacon(BaseFrame1609_4* wsm);
+    virtual void onData(BaseFrame1609_4* wsm);
     virtual bool isCCHActive();
 
     //TODO: Added for Game theory Solution
-    virtual void adjustTxPower(WaveShortMessage* wsm);
+    virtual void adjustTxPower(BaseFrame1609_4* wsm);
     virtual void decreaseTxPower();
     virtual void increaseTxPower();
 
-    virtual MessageInfoEntry* extractMsgInfo(WaveShortMessage* wsm);
+    virtual MessageInfoEntry* extractMsgInfo(BaseFrame1609_4* wsm);
     virtual bool isDuplicateMsg(int messageID);
     virtual bool isInsideROI(MessageInfoEntry* info);
     virtual bool isMessageAlive(MessageInfoEntry* info);
-    virtual WaveShortMessage* createDataMsg(MessageInfoEntry* info);
+    virtual BaseFrame1609_4* createDataMsg(MessageInfoEntry* info);
     virtual void processBackTraffic(int senderAddr);
 
     virtual void receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details);
@@ -128,5 +128,3 @@ public:
 
     virtual ~Flooding();
 };
-
-#endif

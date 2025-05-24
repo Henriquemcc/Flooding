@@ -13,12 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef _RSUAPPLICATION_H_
-#define _RSUAPPLICATION_H_
+#pragma once
 
-#include "BaseWaveApplLayer.h"
-#include "WaveShortMessage_m.h"
+#include "DemoBaseApplLayer.h"
+#include "BaseFrame1609_4_m.h"
 #include "DataMessage_m.h"
+#include "inet/mobility/base/MobilityBase.h"
 
 #include <fstream>
 
@@ -37,8 +37,6 @@ private:
     };
 
 protected:
-    static const simsignalwrap_t mobilityStateChangedSignal;
-
     cMessage* sendDataTimer;
 
     double datarate;
@@ -53,8 +51,8 @@ protected:
     virtual void finish();
 
     virtual void handleSelfMsg(cMessage* msg);
-    virtual void onBeacon(WaveShortMessage* wsm);
-    virtual void onData(WaveShortMessage* wsm);
+    virtual void onBeacon(BaseFrame1609_4* wsm);
+    virtual void onData(BaseFrame1609_4* wsm);
 
     virtual void sendData();
     virtual void readDataFromFile();
@@ -69,5 +67,3 @@ public:
     simsignal_t disseminationStartTime;
     ~RSUApplication();
 };
-
-#endif

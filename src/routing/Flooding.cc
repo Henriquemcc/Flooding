@@ -43,7 +43,7 @@ void Flooding::initialize(int stage)
         getSimulation()->getSystemModule()->subscribe("disseminationStartTime", this);
 
         mac = FindModule<Mac1609_4*>::findSubModule(getParentModule());
-        assert(mac);
+        ASSERT(mac);
 
         //TODO: Added for Game Theory Solution
         curTxPower = mac->par("txPower");
@@ -91,7 +91,7 @@ void Flooding::finish() {
         std::ofstream log;
         std::ostringstream o;
 
-        o << "./results/" << par("log_traffic").longValue() << "-" << par("log_replication").longValue() << "-receiver-" << myId;
+        o << "./results/" << par("log_traffic") << "-" << par("log_replication") << "-receiver-" << myId;
         log.open(o.str().c_str());
 
         for (std::map<int, MessageInfoEntry*>::iterator i = messagesRcvd.begin(); i != messagesRcvd.end(); i++) {
@@ -107,7 +107,7 @@ void Flooding::finish() {
 void Flooding::handleSelfMsg(cMessage* msg) {
     switch (msg->getKind()) {
         case SEND_BEACON_EVT: {
-            WaveShortMessage* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
+            BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
 
             Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
             if (simTime() > par("startDataProductionTime").doubleValue() - 3 &&
@@ -153,7 +153,7 @@ void Flooding::handleSelfMsg(cMessage* msg) {
     }
 }
 
-void Flooding::onBeacon(WaveShortMessage* wsm) {
+void Flooding::onBeacon(BaseFrame1609_4* wsm) {
     Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
     // if back-traffic is enabled, then generate it only three seconds before the main dissemination.
     if (par("generateBackTraffic").boolValue() && simTime() > par("startDataProductionTime").doubleValue() - 3
@@ -162,7 +162,7 @@ void Flooding::onBeacon(WaveShortMessage* wsm) {
     }
 }
 
-void Flooding::onData(WaveShortMessage* wsm) {
+void Flooding::onData(BaseFrame1609_4* wsm) {
     //TODO: Added for GAme Theory Solution
     if (par("adaptTxPower").boolValue())
         adjustTxPower(wsm);
@@ -178,7 +178,7 @@ void Flooding::onData(WaveShortMessage* wsm) {
         messagesRcvd[info->messageID] = info;
         emit(messagesReceived, 1);
 
-        WaveShortMessage* wsm = createDataMsg(info);
+        BaseFrame1609_4* wsm = createDataMsg(info);
         sendWSM(wsm);
 
         emit(messagesTransmitted, 1);
@@ -199,7 +199,7 @@ bool Flooding::isCCHActive() {
 }
 
 //TODO: Added for Game Theory Solution
-void Flooding::adjustTxPower(WaveShortMessage* wsm) {
+void Flooding::adjustTxPower(BaseFrame1609_4* wsm) {
     double rcvTxPower, rcvSNR, utility;
 
     rcvTxPower = ((DeciderResult80211*)((PhyToMacControlInfo*)wsm->getControlInfo())->getDeciderResult())->getRecvPower_dBm();
@@ -245,7 +245,7 @@ void Flooding::increaseTxPower() {
 
 }
 
-Flooding::MessageInfoEntry* Flooding::extractMsgInfo(WaveShortMessage* wsm) {
+Flooding::MessageInfoEntry* Flooding::extractMsgInfo(BaseFrame1609_4* wsm) {
     if (isDuplicateMsg(wsm->getSerial())) {
         return messagesRcvd[wsm->getSerial()];
     }
@@ -280,8 +280,8 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
     return simTime() < info->messageOriginTime + info->messageTTL;
 }
 
-WaveShortMessage* Flooding::createDataMsg(MessageInfoEntry* info) {
-    WaveShortMessage* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
+BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
+    BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
 
     //TODO: Added for Game Theory Solution
     PhyControlMessage *controlInfo = new PhyControlMessage();
@@ -307,7 +307,7 @@ void Flooding::processBackTraffic(int senderAddr) {
     if (lastRequesters.find(senderAddr) == lastRequesters.end()) {
         // Send 60 packets of 1000 bytes on the Service Channel
         for (int i = 0; i < 60; i++) {
-            WaveShortMessage* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
+            BaseFrame1609_4* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
             wsm->setByteLength(1000);
 
             sendWSM(wsm);

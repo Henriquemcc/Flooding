@@ -337,7 +337,7 @@ void Flooding::receiveSignal(cComponent* source, simsignal_t signalID, cObject* 
     BaseWaveApplLayer::receiveSignal(source, signalID, obj, details);
 
     if (signalID == mobilityStateChangedSignal) {
-        Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
+        veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
 
         if (disseminationStarted && curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() &&
                 ((simTime() >= disseminationStartTime) && (simTime() <= (disseminationStartTime + par("dataTTL").doubleValue())))) {

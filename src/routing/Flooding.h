@@ -31,6 +31,9 @@
 #include "inet/common/geometry/common/Coord.h"
 #include "inet/mobility/base/MobilityBase.h"
 
+using namespace veins;
+using namespace inet;
+
 class Flooding : public veins::DemoBaseApplLayer
 {
 protected:

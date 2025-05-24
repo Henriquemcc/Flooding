@@ -107,9 +107,9 @@ void Flooding::finish() {
 void Flooding::handleSelfMsg(cMessage* msg) {
     switch (msg->getKind()) {
         case SEND_BEACON_EVT: {
-            DemoBaseApplLayer::BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
+            veins::BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
 
-            Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
+            inet::Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
             if (simTime() > par("startDataProductionTime").doubleValue() - 3 &&
                     curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
 
@@ -154,7 +154,7 @@ void Flooding::handleSelfMsg(cMessage* msg) {
 }
 
 void Flooding::onBeacon(BaseFrame1609_4* wsm) {
-    Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
+    inet::Coord rsuPosition = inte::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
     // if back-traffic is enabled, then generate it only three seconds before the main dissemination.
     if (par("generateBackTraffic").boolValue() && simTime() > par("startDataProductionTime").doubleValue() - 3
             && curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {

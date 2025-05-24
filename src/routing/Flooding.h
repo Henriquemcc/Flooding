@@ -29,6 +29,7 @@
 #include "veins/base/phyLayer/PhyToMacControlInfo.h"
 #include "veins/modules/messages/PhyControlMessage_m.h"
 #include "inet/common/geometry/common/Coord.h"
+#include "inet/mobility/base/MobilityBase.h"
 
 class Flooding : public veins::DemoBaseApplLayer
 {

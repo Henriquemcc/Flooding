@@ -14,7 +14,7 @@
 //
 
 cplusplus {{
-#include <Coord.h>
+#include "inet/common/geometry/common/Coord.h"
 }}
 
 class noncobject Coord;

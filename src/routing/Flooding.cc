@@ -287,7 +287,7 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
     return simTime() < info->messageOriginTime + info->messageTTL;
 }
 
-BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
+veins::BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
     veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
 
     //TODO: Added for Game Theory Solution

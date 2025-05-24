@@ -116,7 +116,7 @@ void Flooding::handleSelfMsg(cMessage* msg) {
         case SEND_BEACON_EVT: {
             veins::BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
 
-            inet::Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
+            veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
             if (simTime() > par("startDataProductionTime").doubleValue() - 3 &&
                     curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
 

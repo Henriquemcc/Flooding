@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for Flooding
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KVEINS_PROJ=../../veins -KINET_PROJ=../../inet -DVEINS_IMPORT -L$$\(VEINS_PROJ\)/src -lveins$$\(D\)
+#  opp_makemake -f --deep -KVEINS_PROJ=../../veins -KINET_PROJ=../../inet -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -I$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lveins$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -20,7 +20,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH =
+INCLUDE_PATH = -I$(VEINS_PROJ)/src -I$(INET_PROJ)/src
 
 # Additional object and library files to link with
 EXTRA_OBJS =

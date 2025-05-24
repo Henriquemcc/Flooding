@@ -28,14 +28,15 @@
 #include "veins/modules/phy/DeciderResult80211.h"
 #include "veins/base/phyLayer/PhyToMacControlInfo.h"
 #include "veins/modules/messages/PhyControlMessage_m.h"
+#include "inet/common/geometry/common/Coord.h"
 
-class Flooding : public BaseWaveApplLayer
+class Flooding : public veins::BaseWaveApplLayer
 {
 protected:
 
     struct NeighborEntry {
         int senderAddress;
-        Coord position; // Neighbor position
+        inet::Coord position; // Neighbor position
 
         cMessage* beaconHoldTimer;
     };
@@ -43,7 +44,7 @@ protected:
     struct MessageInfoEntry {
         int messageID; // Message unique ID
 
-        Coord messageOriginPosition; // Message origin
+        inet::Coord messageOriginPosition; // Message origin
         double messageROI; // Region of Interest in meters
         simtime_t messageOriginTime; // Time of message inception at source host
         simtime_t messageTTL; // Message's time-to-live

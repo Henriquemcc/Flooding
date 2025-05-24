@@ -16,18 +16,18 @@
 #pragma once
 
 #include "veins/veins.h"
-#include "DemoBaseApplLayer.h"
-#include "BaseFrame1609_4_m.h"
-#include "DataMessage_m.h"
-#include "TraCIMobility.h"
+#include "veins/modules/application/ieee80211p/DemoBaseApplLayer.h"
+#include "veins/modules/messages/BaseFrame1609_4_m.h"
+#include "../messages/DataMessage_m.h"
+#include "veins/modules/mobility/traci/TraCIMobility.h"
 #include <algorithm>
 
-#include "FindModule.h"
-#include "Mac1609_4.h"
+#include "veins/base/utils/FindModule.h"
+#include "veins/modules/mac/ieee80211p/Mac1609_4.h"
 //TODO: Added for Game theory Solution
-#include "DeciderResult80211.h"
-#include "PhyToMacControlInfo.h"
-#include "PhyControlMessage_m.h"
+#include "veins/modules/phy/DeciderResult80211.h"
+#include "veins/base/phyLayer/PhyToMacControlInfo.h"
+#include "veins/modules/messages/PhyControlMessage_m.h"
 
 class Flooding : public BaseWaveApplLayer
 {

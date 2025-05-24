@@ -160,7 +160,7 @@ void Flooding::handleSelfMsg(cMessage* msg) {
     }
 }
 
-void Flooding::onBeacon(BaseFrame1609_4* wsm) {
+void Flooding::onBeacon(veins::BaseFrame1609_4* wsm) {
     veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
     // if back-traffic is enabled, then generate it only three seconds before the main dissemination.
     if (par("generateBackTraffic").boolValue() && simTime() > par("startDataProductionTime").doubleValue() - 3
@@ -169,7 +169,7 @@ void Flooding::onBeacon(BaseFrame1609_4* wsm) {
     }
 }
 
-void Flooding::onData(BaseFrame1609_4* wsm) {
+void Flooding::onData(veins::BaseFrame1609_4* wsm) {
     //TODO: Added for GAme Theory Solution
     if (par("adaptTxPower").boolValue())
         adjustTxPower(wsm);

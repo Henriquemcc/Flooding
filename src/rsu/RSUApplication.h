@@ -22,7 +22,7 @@
 
 #include <fstream>
 
-class RSUApplication : public BaseWaveApplLayer
+class RSUApplication : public DemoBaseApplLayer
 {
 
 private:

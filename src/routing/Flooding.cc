@@ -154,7 +154,7 @@ void Flooding::handleSelfMsg(cMessage* msg) {
 }
 
 void Flooding::onBeacon(BaseFrame1609_4* wsm) {
-    inet::Coord rsuPosition = inte::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
+    veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
     // if back-traffic is enabled, then generate it only three seconds before the main dissemination.
     if (par("generateBackTraffic").boolValue() && simTime() > par("startDataProductionTime").doubleValue() - 3
             && curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {

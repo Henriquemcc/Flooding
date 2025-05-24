@@ -185,7 +185,7 @@ void Flooding::onData(veins::BaseFrame1609_4* wsm) {
         messagesRcvd[info->messageID] = info;
         emit(messagesReceived, 1);
 
-        BaseFrame1609_4* wsm = createDataMsg(info);
+        veins::BaseFrame1609_4* wsm = createDataMsg(info);
         sendWSM(wsm);
 
         emit(messagesTransmitted, 1);
@@ -200,7 +200,7 @@ void Flooding::onData(veins::BaseFrame1609_4* wsm) {
 
 bool Flooding::isCCHActive() {
     uint64_t currenTime = simTime().raw();
-    uint64_t switchingTime = SWITCHING_INTERVAL_11P.raw();
+    uint64_t switchingTime = veins::SWITCHING_INTERVAL_11P.raw();
 
     return ((currenTime / switchingTime) % 2 == 0);
 }

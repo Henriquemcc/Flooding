@@ -206,7 +206,7 @@ bool Flooding::isCCHActive() {
 }
 
 //TODO: Added for Game Theory Solution
-void Flooding::adjustTxPower(BaseFrame1609_4* wsm) {
+void Flooding::adjustTxPower(veins::BaseFrame1609_4* wsm) {
     double rcvTxPower, rcvSNR, utility;
 
     rcvTxPower = ((DeciderResult80211*)((PhyToMacControlInfo*)wsm->getControlInfo())->getDeciderResult())->getRecvPower_dBm();

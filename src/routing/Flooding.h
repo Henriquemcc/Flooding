@@ -72,7 +72,7 @@ protected:
 
     simtime_t disseminationStartTime;
 
-    Mac1609_4* mac;
+    veins::Mac1609_4* mac;
 
     cMessage* CCHStartTimer;
 

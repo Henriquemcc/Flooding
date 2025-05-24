@@ -30,7 +30,7 @@
 #include "veins/modules/messages/PhyControlMessage_m.h"
 #include "inet/common/geometry/common/Coord.h"
 
-class Flooding : public veins::BaseWaveApplLayer
+class Flooding : public veins::DemoBaseApplLayer
 {
 protected:
 

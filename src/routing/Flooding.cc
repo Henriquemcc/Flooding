@@ -288,7 +288,7 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
 }
 
 BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
-    BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
+    veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
 
     //TODO: Added for Game Theory Solution
     PhyControlMessage *controlInfo = new PhyControlMessage();

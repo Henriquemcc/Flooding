@@ -15,6 +15,7 @@
 
 #include "Flooding.h"
 #define type_CCH 0
+int beaconPriority = 3;  // prioridade DSRC típica
 
 Define_Module(Flooding);
 

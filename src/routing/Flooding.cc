@@ -142,13 +142,13 @@ void Flooding::handleSelfMsg(cMessage* msg) {
 
         case CCH_START: {
             totalCollisions = totalCollisions + mac->statsTXRXLostPackets - lastNumCollisions;
-            scheduleAt(simTime() + SWITCHING_INTERVAL_11P + SWITCHING_INTERVAL_11P, CCHStartTimer);
+            scheduleAt(simTime() + veins::SWITCHING_INTERVAL_11P + veins::SWITCHING_INTERVAL_11P, CCHStartTimer);
             break;
         }
 
         case SCH_START: {
             lastNumCollisions = mac->statsTXRXLostPackets;
-            scheduleAt(simTime() + SWITCHING_INTERVAL_11P + SWITCHING_INTERVAL_11P, SCHStartTimer);
+            scheduleAt(simTime() + veins::SWITCHING_INTERVAL_11P + veins::SWITCHING_INTERVAL_11P, SCHStartTimer);
             break;
         }
 

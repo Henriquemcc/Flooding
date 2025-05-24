@@ -352,7 +352,7 @@ void Flooding::receiveSignal(cComponent *source, simsignal_t signalID, const Sim
     if (!strcmp(getSignalName(signalID), "disseminationStartTime")) {
         disseminationStarted = true;
         disseminationStartTime = simTime();
-        Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
+        veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
 
         if (curPosition.distance(rsuPosition) <= par("dataROI").doubleValue())
             wasInROI = true;

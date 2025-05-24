@@ -14,6 +14,7 @@
 // 
 
 #include "Flooding.h"
+#define type_CCH 0
 
 Define_Module(Flooding);
 
@@ -280,7 +281,7 @@ bool Flooding::isDuplicateMsg(int messageID) {
 }
 
 bool Flooding::isInsideROI(MessageInfoEntry* info) {
-    return info->messageOriginPosition.distance(curPosition) < info->messageROI;
+    return info->messageOriginPosition.distance((inet::Coord)curPosition) < info->messageROI;
 }
 
 bool Flooding::isMessageAlive(MessageInfoEntry* info) {

@@ -17,10 +17,10 @@ cplusplus {{
 #include "inet/common/geometry/common/Coord.h"
 }}
 
-class noncobject Coord;
+class noncobject inet::Coord;
 
 packet DataMessage {
-    Coord messageOriginPosition;
+    inet::Coord messageOriginPosition;
     double messageROI;
     simtime_t messageOriginTime;
     simtime_t messageTTL;

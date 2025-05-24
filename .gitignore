@@ -55,3 +55,5 @@ desktop.ini
 # Python cache if using scripts
 __pycache__/
 *.pyc
+src/messages/DataMessage_m.cc
+src/messages/DataMessage_m.h

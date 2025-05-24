@@ -84,7 +84,7 @@ protected:
 
     static const simsignalwrap_t mobilityStateChangedSignal;
 
-    Veins::TraCIMobility* traci;
+    veins::TraCIMobility* traci;
 
     // Used by the back-traffic application. Every time a node receives a beacon that has not been received in the last 3 seconds, then
     // it stores the info about the transmitter of the beacon and transmits 60 packets of 1000B. This simulates other applications
@@ -96,20 +96,20 @@ protected:
     virtual void initialize(int stage);
     virtual void finish();
     virtual void handleSelfMsg(cMessage* msg);
-    virtual void onBeacon(BaseFrame1609_4* wsm);
-    virtual void onData(BaseFrame1609_4* wsm);
+    virtual void onBeacon(veins::BaseFrame1609_4* wsm);
+    virtual void onData(veins::BaseFrame1609_4* wsm);
     virtual bool isCCHActive();
 
     //TODO: Added for Game theory Solution
-    virtual void adjustTxPower(BaseFrame1609_4* wsm);
+    virtual void adjustTxPower(veins::BaseFrame1609_4* wsm);
     virtual void decreaseTxPower();
     virtual void increaseTxPower();
 
-    virtual MessageInfoEntry* extractMsgInfo(BaseFrame1609_4* wsm);
+    virtual MessageInfoEntry* extractMsgInfo(veins::BaseFrame1609_4* wsm);
     virtual bool isDuplicateMsg(int messageID);
     virtual bool isInsideROI(MessageInfoEntry* info);
     virtual bool isMessageAlive(MessageInfoEntry* info);
-    virtual BaseFrame1609_4* createDataMsg(MessageInfoEntry* info);
+    virtual veins::BaseFrame1609_4* createDataMsg(MessageInfoEntry* info);
     virtual void processBackTraffic(int senderAddr);
 
     virtual void receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details);

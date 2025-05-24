@@ -21,10 +21,10 @@ const simsignalwrap_t Flooding::mobilityStateChangedSignal = simsignalwrap_t(MIX
 
 void Flooding::initialize(int stage)
 {
-    BaseWaveApplLayer::initialize(stage);
+    DemoBaseApplLayer::initialize(stage);
 
     if (stage == 0) {
-        traci = Veins::TraCIMobilityAccess().get(getParentModule());
+        traci = veins::TraCIMobilityAccess().get(getParentModule());
 
         //TODO: Added for Game Theory Solution
         lastTxPower = registerSignal("lastTxPower");
@@ -57,24 +57,24 @@ void Flooding::initialize(int stage)
         SCHStartTimer = new cMessage("SCH start", SCH_START);
 
         uint64_t currenTime = simTime().raw();
-        uint64_t switchingTime = SWITCHING_INTERVAL_11P.raw();
+        uint64_t switchingTime = veins::SWITCHING_INTERVAL_11P.raw();
         double timeToNextSwitch = (double)(switchingTime - (currenTime % switchingTime)) / simTime().getScale();
 
         // Control Channel is active
         if ((currenTime / switchingTime) % 2 == 0) {
-            scheduleAt(simTime() + timeToNextSwitch + SWITCHING_INTERVAL_11P, CCHStartTimer);
+            scheduleAt(simTime() + timeToNextSwitch + veins::SWITCHING_INTERVAL_11P, CCHStartTimer);
             scheduleAt(simTime() + timeToNextSwitch, SCHStartTimer);
         }
         // Service Channel is active
         else {
             scheduleAt(simTime() + timeToNextSwitch, CCHStartTimer);
-            scheduleAt(simTime() + timeToNextSwitch + SWITCHING_INTERVAL_11P, SCHStartTimer);
+            scheduleAt(simTime() + timeToNextSwitch + veins::SWITCHING_INTERVAL_11P, SCHStartTimer);
         }
     }
 }
 
 void Flooding::finish() {
-    BaseWaveApplLayer::finish();
+    DemoBaseApplLayer::finish();
 
     if (wasInROI) {
         emit(isInROI, 1);
@@ -107,7 +107,7 @@ void Flooding::finish() {
 void Flooding::handleSelfMsg(cMessage* msg) {
     switch (msg->getKind()) {
         case SEND_BEACON_EVT: {
-            BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
+            DemoBaseApplLayer::BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
 
             Coord rsuPosition = Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
             if (simTime() > par("startDataProductionTime").doubleValue() - 3 &&

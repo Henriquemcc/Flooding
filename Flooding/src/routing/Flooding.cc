@@ -100,7 +100,7 @@ void Flooding::finish() {
         std::ofstream log;
         std::ostringstream o;
 
-        o << "./results/" << par("log_traffic").longValue() << "-" << par("log_replication").longValue() << "-receiver-" << myId;
+        o << "./results/" << par("log_traffic").intValue() << "-" << par("log_replication").intValue() << "-receiver-" << myId;
         log.open(o.str().c_str());
 
         for (std::map<int, MessageInfoEntry*>::iterator i = messagesRcvd.begin(); i != messagesRcvd.end(); i++) {

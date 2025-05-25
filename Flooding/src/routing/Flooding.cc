@@ -22,6 +22,8 @@ Define_Module(Flooding);
 void Flooding::initialize(int stage)
 {
     DemoBaseApplLayer::initialize(stage);
+using DemoBaseApplLayer::prepareWSM;
+using DemoBaseApplLayer::sendWSM;
 
 
     if (stage == 0) {
@@ -117,13 +119,13 @@ void Flooding::finish() {
 void Flooding::handleSelfMsg(cMessage* msg) {
     switch (msg->getKind()) {
         case SEND_BEACON_EVT: {
-            veins::BaseFrame1609_4* wsm = DemoBaseApplLayer::prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
+            veins::BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
 
             veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
             if (simTime() > par("startDataProductionTime").doubleValue() - 3 &&
                     curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
 
-                DemoBaseApplLayer::sendWSM(wsm);
+                sendWSM(wsm);
             } else {
                 delete wsm;
             }
@@ -144,11 +146,13 @@ void Flooding::handleSelfMsg(cMessage* msg) {
         }
 
         case CCH_START: {
+            totalCollisions = totalCollisions + mac->statsTXRXLostPackets - lastNumCollisions;
             scheduleAt(simTime() + veins::SWITCHING_INTERVAL_11P + veins::SWITCHING_INTERVAL_11P, CCHStartTimer);
             break;
         }
 
         case SCH_START: {
+            lastNumCollisions = mac->statsTXRXLostPackets;
             scheduleAt(simTime() + veins::SWITCHING_INTERVAL_11P + veins::SWITCHING_INTERVAL_11P, SCHStartTimer);
             break;
         }
@@ -281,8 +285,7 @@ bool Flooding::isDuplicateMsg(int messageID) {
 }
 
 bool Flooding::isInsideROI(MessageInfoEntry* info) {
-    inet::Coord inetCurPos(curPosition.x, curPosition.y, curPosition.z);
-    return info->messageOriginPosition.distance(inetCurPos) < info->messageROI;
+    return inet::Coord((inet::Coord.x, (inet::Coord.y, (inet::Coord.z).distance(info->messageOriginPosition)curPosition) < info->messageROI;
 }
 
 bool Flooding::isMessageAlive(MessageInfoEntry* info) {

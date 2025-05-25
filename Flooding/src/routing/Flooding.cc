@@ -22,6 +22,9 @@ Define_Module(Flooding);
 void Flooding::initialize(int stage)
 {
     DemoBaseApplLayer::initialize(stage);
+using DemoBaseApplLayer::prepareWSM;
+using DemoBaseApplLayer::sendWSM;
+
 
     if (stage == 0) {
 
@@ -100,7 +103,7 @@ void Flooding::finish() {
         std::ofstream log;
         std::ostringstream o;
 
-        o << "./results/" << par("log_traffic").longValue() << "-" << par("log_replication").longValue() << "-receiver-" << myId;
+        o << "./results/" << par("log_traffic").intValue() << "-" << par("log_replication").intValue() << "-receiver-" << myId;
         log.open(o.str().c_str());
 
         for (std::map<int, MessageInfoEntry*>::iterator i = messagesRcvd.begin(); i != messagesRcvd.end(); i++) {
@@ -167,7 +170,7 @@ void Flooding::onBeacon(veins::BaseFrame1609_4* wsm) {
     // if back-traffic is enabled, then generate it only three seconds before the main dissemination.
     if (par("generateBackTraffic").boolValue() && simTime() > par("startDataProductionTime").doubleValue() - 3
             && curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
-        processBackTraffic(wsm->getSenderAddress());
+        processBackTraffic(wsm->getSenderAddress().c_str());
     }
 }
 
@@ -255,14 +258,14 @@ void Flooding::increaseTxPower() {
 }
 
 Flooding::MessageInfoEntry* Flooding::extractMsgInfo(BaseFrame1609_4* wsm) {
-    if (isDuplicateMsg(wsm->getSerial())) {
-        return messagesRcvd[wsm->getSerial()];
+    if (isDuplicateMsg(wsm->getId())) {
+        return messagesRcvd[wsm->getId()];
     }
     DataMessage* dataMsg = dynamic_cast<DataMessage*>(wsm->decapsulate());
 
     MessageInfoEntry* info = new MessageInfoEntry;
 
-    info->messageID = wsm->getSerial();
+    info->messageID = wsm->getId();
     info->messageOriginPosition = dataMsg->getMessageOriginPosition();
     info->messageROI = dataMsg->getMessageROI();
     info->messageOriginTime = dataMsg->getMessageOriginTime();
@@ -270,7 +273,7 @@ Flooding::MessageInfoEntry* Flooding::extractMsgInfo(BaseFrame1609_4* wsm) {
     info->hops = dataMsg->getHops() + 1;
     info->receptionTime = simTime();
     info->messageLength = wsm->getByteLength();
-    info->distanceToOrigin = info->messageOriginPosition.distance(curPosition);
+    info->distanceToOrigin = inet::Coord(curPosition.x, curPosition.y, curPosition.z).distance(info->messageOriginPosition);
 
     delete dataMsg;
 
@@ -282,7 +285,7 @@ bool Flooding::isDuplicateMsg(int messageID) {
 }
 
 bool Flooding::isInsideROI(MessageInfoEntry* info) {
-    return info->messageOriginPosition.distance((inet::Coord)curPosition) < info->messageROI;
+    return inet::Coord((inet::Coord.x, (inet::Coord.y, (inet::Coord.z).distance(info->messageOriginPosition)curPosition) < info->messageROI;
 }
 
 bool Flooding::isMessageAlive(MessageInfoEntry* info) {
@@ -290,7 +293,7 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
 }
 
 veins::BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
-    veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
+    veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, 1, 3, 0, info->messageID);
 
     //TODO: Added for Game Theory Solution
     PhyControlMessage *controlInfo = new PhyControlMessage();
@@ -316,7 +319,7 @@ void Flooding::processBackTraffic(int senderAddr) {
     if (lastRequesters.find(senderAddr) == lastRequesters.end()) {
         // Send 60 packets of 1000 bytes on the Service Channel
         for (int i = 0; i < 60; i++) {
-            BaseFrame1609_4* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
+            BaseFrame1609_4* wsm = prepareWSM("back traffic", dataLengthBits, 1, 3, 0, i);
             wsm->setByteLength(1000);
 
             sendWSM(wsm);
@@ -334,7 +337,7 @@ void Flooding::processBackTraffic(int senderAddr) {
 
 void Flooding::receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details) {
     Enter_Method_Silent();
-    BaseWaveApplLayer::receiveSignal(source, signalID, obj, details);
+    DemoBaseApplLayer::receiveSignal(source, signalID, obj, details);
 
     if (signalID == mobilityStateChangedSignal) {
         veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());

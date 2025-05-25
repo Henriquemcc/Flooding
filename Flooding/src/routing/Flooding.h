@@ -34,8 +34,7 @@
 using namespace veins;
 using namespace inet;
 
-class Flooding : public veins::DemoBaseApplLayer
-{
+class Flooding : public veins::DemoBaseApplLayer {
 protected:
 
     struct NeighborEntry {

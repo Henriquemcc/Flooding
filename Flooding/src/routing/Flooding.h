@@ -30,6 +30,9 @@
 #include "veins/modules/messages/PhyControlMessage_m.h"
 #include "inet/common/geometry/common/Coord.h"
 #include "inet/mobility/base/MobilityBase.h"
+#include "veins/modules/mobility/traci/TraCIMobility.h"
+simsignal_t mobilityStateChangedSignal;
+
 
 using namespace veins;
 using namespace inet;

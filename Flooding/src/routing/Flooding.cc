@@ -22,6 +22,7 @@ Define_Module(Flooding);
 void Flooding::initialize(int stage)
 {
     DemoBaseApplLayer::initialize(stage);
+    mobilityStateChangedSignal = registerSignal("mobilityStateChanged");
 
 
     if (stage == 0) {
@@ -117,13 +118,18 @@ void Flooding::finish() {
 void Flooding::handleSelfMsg(cMessage* msg) {
     switch (msg->getKind()) {
         case SEND_BEACON_EVT: {
-            veins::BaseFrame1609_4* wsm = DemoBaseApplLayer::prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
+            veins::BaseFrame1609_4* wsm = new veins::BaseFrame1609_4();
+            wsm->setWsmData("beacon");
+            wsm->setChannelNumber(type_CCH);
+            wsm->setPriority(beaconPriority);
+            wsm->setSerial(-1); // ou o número de série desejado
+            wsm->setBitLength(beaconLengthBits);
 
             veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
             if (simTime() > par("startDataProductionTime").doubleValue() - 3 &&
                     curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
 
-                DemoBaseApplLayer::sendWSM(wsm);
+                sendDown(wsm);
             } else {
                 delete wsm;
             }
@@ -166,7 +172,7 @@ void Flooding::onBeacon(veins::BaseFrame1609_4* wsm) {
     // if back-traffic is enabled, then generate it only three seconds before the main dissemination.
     if (par("generateBackTraffic").boolValue() && simTime() > par("startDataProductionTime").doubleValue() - 3
             && curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
-        processBackTraffic(wsm->getSenderAddress().c_str());
+        processBackTraffic(wsm->getSenderAddress().str());
     }
 }
 
@@ -290,7 +296,13 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
 }
 
 veins::BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
-    veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, 1, 3, 0, info->messageID);
+    veins::BaseFrame1609_4* wsm = new veins::BaseFrame1609_4();
+    wsm->setWsmData("data");
+    wsm->setChannelNumber(1);
+    wsm->setPriority(3);
+    wsm->setSerial(info->messageID);
+    wsm->setBitLength(dataLengthBits);
+    sendDown(wsm);
 
     //TODO: Added for Game Theory Solution
     PhyControlMessage *controlInfo = new PhyControlMessage();
@@ -316,10 +328,14 @@ void Flooding::processBackTraffic(int senderAddr) {
     if (lastRequesters.find(senderAddr) == lastRequesters.end()) {
         // Send 60 packets of 1000 bytes on the Service Channel
         for (int i = 0; i < 60; i++) {
-            BaseFrame1609_4* wsm = prepareWSM("back traffic", dataLengthBits, 1, 3, 0, i);
+            veins::BaseFrame1609_4* wsm = new veins::BaseFrame1609_4();
+            wsm->setWsmData("data");
+            wsm->setChannelNumber(1);
+            wsm->setPriority(3);
+            wsm->setSerial(info->messageID);
+            wsm->setBitLength(dataLengthBits);
+            sendDown(wsm);
             wsm->setByteLength(1000);
-
-            sendWSM(wsm);
         }
 
         NeighborEntry* entry = new NeighborEntry;

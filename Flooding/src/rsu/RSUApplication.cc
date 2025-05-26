@@ -51,7 +51,7 @@ void RSUApplication::initialize(int stage) {
 }
 
 void RSUApplication::finish() {
-    BaseWaveApplLayer::finish();
+    veins::DemoBaseApplLayer::finish();
 
     std::ofstream log;
     std::ostringstream o;

@@ -52,7 +52,7 @@ protected:
 
     virtual void handleSelfMsg(cMessage* msg);
     virtual void onBeacon(veins::BaseFrame1609_4* wsm);
-    virtual void onData(venis::BaseFrame1609_4* wsm);
+    virtual void onData(veins::BaseFrame1609_4* wsm);
 
     virtual void sendData();
     virtual void readDataFromFile();

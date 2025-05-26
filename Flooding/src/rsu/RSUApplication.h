@@ -15,9 +15,9 @@
 
 #pragma once
 
-#include "DemoBaseApplLayer.h"
-#include "BaseFrame1609_4_m.h"
-#include "DataMessage_m.h"
+#include "veins/modules/application/ieee80211p/DemoBaseApplLayer.h"
+#include "veins/modules/messages/BaseFrame1609_4_m.h"
+#include "../messages/DataMessage_m.h"
 #include "inet/mobility/base/MobilityBase.h"
 
 #include <fstream>

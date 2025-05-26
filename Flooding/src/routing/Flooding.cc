@@ -116,15 +116,15 @@ void Flooding::finish() {
 void Flooding::handleSelfMsg(cMessage* msg) {
     switch (msg->getKind()) {
         case SEND_BEACON_EVT: {
-            veins::BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
+            //veins::BaseFrame1609_4* wsm = prepareWSM("beacon", beaconLengthBits, type_CCH, beaconPriority, 0, -1);
 
             veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
             if (simTime() > par("startDataProductionTime").doubleValue() - 3 &&
                     curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
 
-                sendWSM(wsm);
+                //sendWSM(wsm);
             } else {
-                delete wsm;
+                //delete wsm;
             }
 
             scheduleAt(simTime() + par("beaconInterval").doubleValue(), sendBeaconEvt);
@@ -143,13 +143,13 @@ void Flooding::handleSelfMsg(cMessage* msg) {
         }
 
         case CCH_START: {
-            totalCollisions = totalCollisions + mac->statsTXRXLostPackets - lastNumCollisions;
+            //totalCollisions = totalCollisions + mac->statsTXRXLostPackets - lastNumCollisions;
             scheduleAt(simTime() + veins::SWITCHING_INTERVAL_11P + veins::SWITCHING_INTERVAL_11P, CCHStartTimer);
             break;
         }
 
         case SCH_START: {
-            lastNumCollisions = mac->statsTXRXLostPackets;
+            //lastNumCollisions = mac->statsTXRXLostPackets;
             scheduleAt(simTime() + veins::SWITCHING_INTERVAL_11P + veins::SWITCHING_INTERVAL_11P, SCHStartTimer);
             break;
         }
@@ -167,7 +167,7 @@ void Flooding::onBeacon(veins::BaseFrame1609_4* wsm) {
     // if back-traffic is enabled, then generate it only three seconds before the main dissemination.
     if (par("generateBackTraffic").boolValue() && simTime() > par("startDataProductionTime").doubleValue() - 3
             && curPosition.distance(rsuPosition) <= par("dataROI").doubleValue() + 300) {
-        processBackTraffic(wsm->getSenderAddress());
+        //processBackTraffic(wsm->getSenderAddress());
     }
 }
 
@@ -187,8 +187,8 @@ void Flooding::onData(veins::BaseFrame1609_4* wsm) {
         messagesRcvd[info->messageID] = info;
         emit(messagesReceived, 1);
 
-        veins::BaseFrame1609_4* wsm = createDataMsg(info);
-        sendWSM(wsm);
+        //veins::BaseFrame1609_4* wsm = createDataMsg(info);
+        //sendWSM(wsm);
 
         emit(messagesTransmitted, 1);
 
@@ -255,14 +255,16 @@ void Flooding::increaseTxPower() {
 }
 
 Flooding::MessageInfoEntry* Flooding::extractMsgInfo(BaseFrame1609_4* wsm) {
+    /*
     if (isDuplicateMsg(wsm->getSerial())) {
         return messagesRcvd[wsm->getSerial()];
     }
+    */
     DataMessage* dataMsg = dynamic_cast<DataMessage*>(wsm->decapsulate());
 
     MessageInfoEntry* info = new MessageInfoEntry;
 
-    info->messageID = wsm->getSerial();
+    //info->messageID = wsm->getSerial();
     info->messageOriginPosition = dataMsg->getMessageOriginPosition();
     info->messageROI = dataMsg->getMessageROI();
     info->messageOriginTime = dataMsg->getMessageOriginTime();
@@ -270,7 +272,7 @@ Flooding::MessageInfoEntry* Flooding::extractMsgInfo(BaseFrame1609_4* wsm) {
     info->hops = dataMsg->getHops() + 1;
     info->receptionTime = simTime();
     info->messageLength = wsm->getByteLength();
-    info->distanceToOrigin = info->messageOriginPosition.distance(curPosition);
+    //info->distanceToOrigin = info->messageOriginPosition.distance(curPosition);
 
     delete dataMsg;
 
@@ -282,7 +284,8 @@ bool Flooding::isDuplicateMsg(int messageID) {
 }
 
 bool Flooding::isInsideROI(MessageInfoEntry* info) {
-    return info->messageOriginPosition.distance((inet::Coord)curPosition) < info->messageROI;
+    return false;
+    //return info->messageOriginPosition.distance((inet::Coord)curPosition) < info->messageROI;
 }
 
 bool Flooding::isMessageAlive(MessageInfoEntry* info) {
@@ -290,12 +293,12 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
 }
 
 veins::BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
-    veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
+    //veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
 
     //TODO: Added for Game Theory Solution
     PhyControlMessage *controlInfo = new PhyControlMessage();
     controlInfo->setTxPower_mW(curTxPower);
-    wsm->setControlInfo(dynamic_cast<cObject *>(controlInfo));
+    //wsm->setControlInfo(dynamic_cast<cObject *>(controlInfo));
 
     DataMessage* msg = new DataMessage("data");
 
@@ -305,21 +308,22 @@ veins::BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
     msg->setMessageTTL(info->messageTTL);
     msg->setHops(info->hops);
 
-    wsm->setByteLength(info->messageLength);
+    //wsm->setByteLength(info->messageLength);
 
-    wsm->encapsulate(msg);
+    //wsm->encapsulate(msg);
 
-    return wsm;
+    //return wsm;
+    return nullptr;
 }
 
 void Flooding::processBackTraffic(int senderAddr) {
     if (lastRequesters.find(senderAddr) == lastRequesters.end()) {
         // Send 60 packets of 1000 bytes on the Service Channel
         for (int i = 0; i < 60; i++) {
-            BaseFrame1609_4* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
-            wsm->setByteLength(1000);
+            //BaseFrame1609_4* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
+            //wsm->setByteLength(1000);
 
-            sendWSM(wsm);
+            //sendWSM(wsm);
         }
 
         NeighborEntry* entry = new NeighborEntry;
@@ -334,8 +338,8 @@ void Flooding::processBackTraffic(int senderAddr) {
 
 void Flooding::receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details) {
     Enter_Method_Silent();
-    BaseWaveApplLayer::receiveSignal(source, signalID, obj, details);
-
+    //BaseWaveApplLayer::receiveSignal(source, signalID, obj, details);
+    /*
     if (signalID == mobilityStateChangedSignal) {
         veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());
 
@@ -344,6 +348,7 @@ void Flooding::receiveSignal(cComponent* source, simsignal_t signalID, cObject* 
             wasInROI = true;
         }
     }
+    */
 }
 
 void Flooding::receiveSignal(cComponent *source, simsignal_t signalID, const SimTime& t) {

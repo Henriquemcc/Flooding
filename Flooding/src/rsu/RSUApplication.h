@@ -22,7 +22,7 @@
 
 #include <fstream>
 
-class RSUApplication : public DemoBaseApplLayer
+class RSUApplication : public veins::DemoBaseApplLayer
 {
 
 private:
@@ -51,8 +51,8 @@ protected:
     virtual void finish();
 
     virtual void handleSelfMsg(cMessage* msg);
-    virtual void onBeacon(BaseFrame1609_4* wsm);
-    virtual void onData(BaseFrame1609_4* wsm);
+    virtual void onBeacon(veins::BaseFrame1609_4* wsm);
+    virtual void onData(venis::BaseFrame1609_4* wsm);
 
     virtual void sendData();
     virtual void readDataFromFile();

@@ -19,7 +19,7 @@
 Define_Module(RSUApplication);
 
 void RSUApplication::initialize(int stage) {
-    BaseWaveApplLayer::initialize(stage);
+    veins::DemoBaseApplLayer::initialize(stage);
 
     if (stage == 0) {
 
@@ -166,5 +166,5 @@ void RSUApplication::readDataFromFile() {
 
 void RSUApplication::receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details) {
     Enter_Method_Silent();
-    BaseWaveApplLayer::receiveSignal(source, signalID, obj, details);
+    veins::DemoBaseApplLayer::receiveSignal(source, signalID, obj, details);
 }

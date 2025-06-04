@@ -34,11 +34,12 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/routing/Flooding.o $O/rsu/RSUApplication.o $O/messages/DataMessage_m.o
+OBJS = $O/routing/Flooding.o $O/rsu/RSUApplication.o $O/messages/DataMessage_m.o $O/routing/WaveShortMessage_m.o
 
 # Message files
 MSGFILES = \
-    messages/DataMessage.msg
+    messages/DataMessage.msg \
+    routing/WaveShortMessage.msg
 
 # SM files
 SMFILES =

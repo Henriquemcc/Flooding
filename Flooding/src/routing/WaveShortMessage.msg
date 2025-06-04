@@ -20,6 +20,7 @@
 
 cplusplus {{
 #include "veins/base/utils/Coord.h"
+using namespace veins;
 }}
 
 class noncobject Coord;

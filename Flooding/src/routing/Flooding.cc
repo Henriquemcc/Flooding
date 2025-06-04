@@ -200,6 +200,10 @@ void Flooding::onData(veins::BaseFrame1609_4* wsm) {
     }
 }
 
+void Flooding::sendWSM(WaveShortMessage* wsm) {
+    sendDelayedDown(wsm,individualOffset);
+}
+
 bool Flooding::isCCHActive() {
     uint64_t currenTime = simTime().raw();
     uint64_t switchingTime = veins::SWITCHING_INTERVAL_11P.raw();

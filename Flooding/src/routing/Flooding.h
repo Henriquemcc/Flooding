@@ -116,6 +116,7 @@ protected:
 
     virtual void receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details);
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, const SimTime& t);
+    virtual void sendWSM(WaveShortMessage* wsm);
 
 public:
     //TODO: Added for Game theory Solution

@@ -204,6 +204,34 @@ void Flooding::sendWSM(WaveShortMessage* wsm) {
     sendDelayedDown(wsm,individualOffset);
 }
 
+WaveShortMessage*  Flooding::prepareWSM(std::string name, int lengthBits, t_channel channel, int priority, int rcvId, int serial) {
+    WaveShortMessage* wsm =     new WaveShortMessage(name.c_str());
+    wsm->addBitLength(headerLength);
+    wsm->addBitLength(lengthBits);
+
+    switch (channel) {
+        case type_SCH: wsm->setChannelNumber(Channels::SCH1); break; //will be rewritten at Mac1609_4 to actual Service Channel. This is just so no controlInfo is needed
+        case type_CCH: wsm->setChannelNumber(Channels::CCH); break;
+    }
+    wsm->setPsid(0);
+    wsm->setPriority(priority);
+    wsm->setWsmVersion(1);
+    wsm->setTimestamp(simTime());
+    wsm->setSenderAddress(myId);
+    wsm->setRecipientAddress(rcvId);
+    wsm->setSenderPos(curPosition);
+    wsm->setSerial(serial);
+
+    if (name == "beacon") {
+        DBG << "Creating Beacon with Priority " << priority << " at Applayer at " << wsm->getTimestamp() << std::endl;
+    }
+    if (name == "data") {
+        DBG << "Creating Data with Priority " << priority << " at Applayer at " << wsm->getTimestamp() << std::endl;
+    }
+
+    return wsm;
+}
+
 bool Flooding::isCCHActive() {
     uint64_t currenTime = simTime().raw();
     uint64_t switchingTime = veins::SWITCHING_INTERVAL_11P.raw();

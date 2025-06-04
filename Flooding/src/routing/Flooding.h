@@ -30,6 +30,7 @@
 #include "veins/modules/messages/PhyControlMessage_m.h"
 #include "inet/common/geometry/common/Coord.h"
 #include "inet/mobility/base/MobilityBase.h"
+#include "WaveShortMessage_m.h"
 
 using namespace veins;
 using namespace inet;

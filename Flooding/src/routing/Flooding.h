@@ -33,6 +33,7 @@
 #include "WaveShortMessage_m.h"
 #include "Consts80211p.h"
 #include "veins/modules/utility/Consts80211p.h"
+#include "CustomMac16094.h"
 
 using namespace veins;
 using namespace inet;
@@ -79,7 +80,7 @@ protected:
 
     simtime_t disseminationStartTime;
 
-    veins::Mac1609_4* mac;
+    CustomMac1609_4* mac;
 
     cMessage* CCHStartTimer;
 

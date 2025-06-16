@@ -50,7 +50,7 @@ void Flooding::initialize(int stage)
 
         getSimulation()->getSystemModule()->subscribe("disseminationStartTime", this);
 
-        mac = veins::FindModule<veins::Mac1609_4*>::findSubModule(getParentModule());
+        mac = veins::FindModule<CustomMac1609_4*>::findSubModule(getParentModule());
         ASSERT(mac);
 
         //TODO: Added for Game Theory Solution

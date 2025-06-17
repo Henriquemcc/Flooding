@@ -56,7 +56,7 @@ void RSUApplication::finish() {
     std::ofstream log;
     std::ostringstream o;
 
-    o << "./results/" << par("log_traffic") << "-" << par("log_replication") << "-sender";
+    o << "./results/" << par("log_traffic").stringValue() << "-" << par("log_replication").stringValue() << "-sender";
     log.open(o.str().c_str());
 
     for (std::map<simtime_t, MessageEntryInfo*>::iterator i = loggingInfo.begin(); i != loggingInfo.end(); i++) {

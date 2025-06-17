@@ -110,7 +110,7 @@ void RSUApplication::sendData() {
         MessageEntryInfo* videoInfo = outputQueue.front();
         outputQueue.pop_front();
 
-        WaveShortMessage wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, videoInfo->ID);
+        WaveShortMessage wsm = prepareWSM("data", dataLengthBits, type_SCH, dataUserPriority, 0, videoInfo->ID);
 
         // Send first message
         DataMessage* dataMsg = new DataMessage("data");

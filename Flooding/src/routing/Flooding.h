@@ -103,19 +103,19 @@ protected:
     virtual void finish();
     virtual void handleSelfMsg(cMessage* msg);
     virtual void onBeacon(WaveShortMessage* wsm);
-    virtual void onData(veins::BaseFrame1609_4* wsm);
+    virtual void onData(WaveShortMessage* wsm);
     virtual bool isCCHActive();
 
     //TODO: Added for Game theory Solution
-    virtual void adjustTxPower(veins::BaseFrame1609_4* wsm);
+    virtual void adjustTxPower(WaveShortMessage* wsm);
     virtual void decreaseTxPower();
     virtual void increaseTxPower();
 
-    virtual MessageInfoEntry* extractMsgInfo(veins::BaseFrame1609_4* wsm);
+    virtual MessageInfoEntry* extractMsgInfo(WaveShortMessage* wsm);
     virtual bool isDuplicateMsg(int messageID);
     virtual bool isInsideROI(MessageInfoEntry* info);
     virtual bool isMessageAlive(MessageInfoEntry* info);
-    virtual veins::BaseFrame1609_4* createDataMsg(MessageInfoEntry* info);
+    virtual WaveShortMessage* createDataMsg(MessageInfoEntry* info);
     virtual void processBackTraffic(int senderAddr);
 
     virtual void receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details);

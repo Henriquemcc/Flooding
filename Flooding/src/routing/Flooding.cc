@@ -170,7 +170,7 @@ void Flooding::onBeacon(WaveShortMessage* wsm) {
     }
 }
 
-void Flooding::onData(veins::BaseFrame1609_4* wsm) {
+void Flooding::onData(WaveShortMessage* wsm) {
     //TODO: Added for GAme Theory Solution
     if (par("adaptTxPower").boolValue())
         adjustTxPower(wsm);
@@ -186,7 +186,7 @@ void Flooding::onData(veins::BaseFrame1609_4* wsm) {
         messagesRcvd[info->messageID] = info;
         emit(messagesReceived, 1);
 
-        veins::BaseFrame1609_4* wsm = createDataMsg(info);
+        WaveShortMessage* wsm = createDataMsg(info);
         sendWSM(wsm);
 
         emit(messagesTransmitted, 1);
@@ -239,7 +239,7 @@ bool Flooding::isCCHActive() {
 }
 
 //TODO: Added for Game Theory Solution
-void Flooding::adjustTxPower(veins::BaseFrame1609_4* wsm) {
+void Flooding::adjustTxPower(WaveShortMessage* wsm) {
     double rcvTxPower, rcvSNR, utility;
 
     rcvTxPower = ((DeciderResult80211*)((PhyToMacControlInfo*)wsm->getControlInfo())->getDeciderResult())->getRecvPower_dBm();
@@ -285,7 +285,7 @@ void Flooding::increaseTxPower() {
 
 }
 
-Flooding::MessageInfoEntry* Flooding::extractMsgInfo(BaseFrame1609_4* wsm) {
+Flooding::MessageInfoEntry* Flooding::extractMsgInfo(WaveShortMessage* wsm) {
     if (isDuplicateMsg(wsm->getSerial())) {
         return messagesRcvd[wsm->getSerial()];
     }
@@ -320,8 +320,8 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
     return simTime() < info->messageOriginTime + info->messageTTL;
 }
 
-veins::BaseFrame1609_4* Flooding::createDataMsg(MessageInfoEntry* info) {
-    veins::BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
+WaveShortMessage* Flooding::createDataMsg(MessageInfoEntry* info) {
+    WaveShortMessage* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
 
     //TODO: Added for Game Theory Solution
     PhyControlMessage *controlInfo = new PhyControlMessage();
@@ -347,7 +347,7 @@ void Flooding::processBackTraffic(int senderAddr) {
     if (lastRequesters.find(senderAddr) == lastRequesters.end()) {
         // Send 60 packets of 1000 bytes on the Service Channel
         for (int i = 0; i < 60; i++) {
-            BaseFrame1609_4* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
+            WaveShortMessage* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
             wsm->setByteLength(1000);
 
             sendWSM(wsm);

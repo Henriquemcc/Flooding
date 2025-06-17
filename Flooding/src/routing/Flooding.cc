@@ -314,7 +314,8 @@ bool Flooding::isDuplicateMsg(int messageID) {
 }
 
 bool Flooding::isInsideROI(MessageInfoEntry* info) {
-    return info->messageOriginPosition.distance((inet::Coord)curPosition) < info->messageROI;
+    inet::Coord converted = inet::Coord(curPosition.x, curPosition.y, curPosition.z);
+    return info->messageOriginPosition.distance(converted) < info->messageROI;
 }
 
 bool Flooding::isMessageAlive(MessageInfoEntry* info) {

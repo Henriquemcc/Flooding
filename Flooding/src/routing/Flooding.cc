@@ -23,7 +23,7 @@ void Flooding::initialize(int stage)
     DemoBaseApplLayer::initialize(stage);
 
     if (stage == 0) {
-
+        mobilityStateChangedSignal = registerSignal("mobilityStateChanged");
         cModule* mobility = getParentModule()->getSubmodule("mobility");
         if (mobility){
             mobility->subscribe(inet::MobilityBase::mobilityStateChangedSignal, this);

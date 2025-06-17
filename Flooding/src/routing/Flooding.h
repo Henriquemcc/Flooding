@@ -42,6 +42,8 @@ class Flooding : public veins::DemoBaseApplLayer
 {
 protected:
 
+    simsignal_t mobilityStateChangedSignal;
+
     struct NeighborEntry {
         int senderAddress;
         inet::Coord position; // Neighbor position

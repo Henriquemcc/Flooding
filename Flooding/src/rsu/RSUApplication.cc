@@ -116,7 +116,8 @@ void RSUApplication::sendData() {
         DataMessage* dataMsg = new DataMessage("data");
         dataMsg->setHops(0);
 
-        dataMsg->setMessageOriginPosition(curPosition);
+        inet::Coord converted = inet::Coord(curPosition.x, curPosition.y, curPosition.z);
+        dataMsg->setMessageOriginPosition(converted);
         dataMsg->setMessageROI(par("dataROI").doubleValue());
         dataMsg->setMessageOriginTime(simTime());
         dataMsg->setMessageTTL(par("dataTTL"));

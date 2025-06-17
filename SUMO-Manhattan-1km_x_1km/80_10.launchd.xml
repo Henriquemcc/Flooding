@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
- <basedir path="../SUMO-Manhattan-1km_x_1km/"/>
+ <basedir path="/home/veins/Simulacoes/guilhermemm/SUMO-Manhattan-1km_x_1km"/>
  <copy file="network.net.xml"/>
  <copy file="80_10.rou.xml"/>
  <copy file="80_10.sumo.cfg" type="config"/>

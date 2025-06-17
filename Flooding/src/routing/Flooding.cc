@@ -367,7 +367,7 @@ void Flooding::processBackTraffic(int senderAddr) {
 
 void Flooding::receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details) {
     Enter_Method_Silent();
-    BaseWaveApplLayer::receiveSignal(source, signalID, obj, details);
+    DemoBaseApplLayer::receiveSignal(source, signalID, obj, details);
 
     if (signalID == mobilityStateChangedSignal) {
         veins::Coord rsuPosition = veins::Coord(par("eventOriginX").doubleValue(), par("eventOriginY").doubleValue(), par("eventOriginZ").doubleValue());

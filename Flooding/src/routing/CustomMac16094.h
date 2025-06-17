@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include <veins/modules/mac/ieee80211p/Mac1609_4.h>
+#include "veins/modules/mac/ieee80211p/Mac1609_4.h"
 
 class CustomMac1609_4: public veins::Mac1609_4 {
 public:

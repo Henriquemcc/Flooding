@@ -22,6 +22,7 @@ simple Flooding extends DemoBaseApplLayer
     @statistic[lastTxPower](checkSignals=false);
     @statistic[meanSNR](checkSignals=false);
     @statistic[sentDownMACInCCH](checkSignals=false);
+    @statistic[collisions](checkSignals=false);
     //@statistic[lastTxPower](record=mean);
     @statistic[meanSNR](record=mean);
     @statistic[sentDownMACInCCH](record=sum);

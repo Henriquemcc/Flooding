@@ -200,7 +200,7 @@ void Flooding::onData(WaveShortMessage* wsm) {
 }
 
 void Flooding::sendWSM(WaveShortMessage* wsm) {
-    sendDelayedDown(wsm,individualOffset);
+    sendDelayedDown(wsm,simtime_t(0.01));
 }
 
 WaveShortMessage*  Flooding::prepareWSM(std::string name, int lengthBits, t_channel channel, int priority, int rcvId, int serial) {

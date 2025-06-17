@@ -323,7 +323,7 @@ bool Flooding::isMessageAlive(MessageInfoEntry* info) {
 }
 
 WaveShortMessage* Flooding::createDataMsg(MessageInfoEntry* info) {
-    WaveShortMessage* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, info->messageID);
+    WaveShortMessage* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataUserPriority, 0, info->messageID);
 
     //TODO: Added for Game Theory Solution
     PhyControlMessage *controlInfo = new PhyControlMessage();

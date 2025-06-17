@@ -155,7 +155,7 @@ void RSUApplication::readDataFromFile() {
         outputQueue.push_back(videoInfo);
     }*/
 
-    for (int ID = 1; ID <= par("numberPackets"); ID++) {
+    for (int ID = 1; ID <= par("numberPackets").intValue(); ID++) {
         MessageEntryInfo* videoInfo = new MessageEntryInfo;
         videoInfo->ID = ID;
         videoInfo->length = par("packetSize");

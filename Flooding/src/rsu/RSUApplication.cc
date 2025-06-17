@@ -93,7 +93,7 @@ void RSUApplication::handleSelfMsg(cMessage* msg) {
     }
 }
 
-void RSUApplication::onBeacon(BaseFrame1609_4* wsm) {
+void RSUApplication::onBeacon(WaveShortMessage wsm) {
     if (!disseminationStarted && simTime() >= par("startDataProductionTime")) {
         emit(disseminationStartTime, simTime());
         disseminationStarted = true;
@@ -103,14 +103,14 @@ void RSUApplication::onBeacon(BaseFrame1609_4* wsm) {
     }
 }
 
-void RSUApplication::onData(BaseFrame1609_4* wsm) {}
+void RSUApplication::onData(WaveShortMessage wsm) {}
 
 void RSUApplication::sendData() {
     if (outputQueue.size() != 0) {
         MessageEntryInfo* videoInfo = outputQueue.front();
         outputQueue.pop_front();
 
-        BaseFrame1609_4* wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, videoInfo->ID);
+        WaveShortMessage wsm = prepareWSM("data", dataLengthBits, type_SCH, dataPriority, 0, videoInfo->ID);
 
         // Send first message
         DataMessage* dataMsg = new DataMessage("data");

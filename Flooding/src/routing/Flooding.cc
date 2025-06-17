@@ -349,7 +349,7 @@ void Flooding::processBackTraffic(int senderAddr) {
     if (lastRequesters.find(senderAddr) == lastRequesters.end()) {
         // Send 60 packets of 1000 bytes on the Service Channel
         for (int i = 0; i < 60; i++) {
-            WaveShortMessage* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataPriority, 0, i);
+            WaveShortMessage* wsm = prepareWSM("back traffic", dataLengthBits, type_SCH, dataUserPriority, 0, i);
             wsm->setByteLength(1000);
 
             sendWSM(wsm);

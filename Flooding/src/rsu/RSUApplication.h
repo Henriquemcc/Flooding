@@ -62,6 +62,7 @@ protected:
     virtual void readDataFromFile();
 
     virtual void receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details);
+    virtual void sendWSM(WaveShortMessage* wsm);
     virtual WaveShortMessage* prepareWSM(std::string name, int dataLengthBits, t_channel channel, int priority, int rcvId, int serial=0);
 
 public:

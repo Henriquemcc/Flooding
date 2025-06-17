@@ -197,3 +197,7 @@ WaveShortMessage*  RSUApplication::prepareWSM(std::string name, int lengthBits, 
 
     return wsm;
 }
+
+void RSUApplication::sendWSM(WaveShortMessage* wsm) {
+    sendDelayedDown(wsm,simtime_t(0.01));
+}

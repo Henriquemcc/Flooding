@@ -35,6 +35,8 @@ simple RSUApplication extends DemoBaseApplLayer
     	int packetSize @unit(bit) = default(16384bit);
     	
     	double datarate @unit(bps) = default(2Mbps);
+    	
+    	bool sendData = default(false); // se o RSU envia dados
         
     	@class(RSUApplication);
 }

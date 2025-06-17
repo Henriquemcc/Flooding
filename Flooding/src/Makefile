@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for Flooding
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KVEINS_PROJ=../../veins -KFLOODING_PROJ=.. -KINET_PROJ=../../inet -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -I$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lveins$$\(D\)
+#  opp_makemake -f --deep -KINET_PROJ=../../inet -KVEINS_PROJ=../../veins -KFLOODING_PROJ=.. -DINET_IMPORT -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -I$$\(INET_PROJ\)/src -L$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lINET$$\(D\) -lveins$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -26,7 +26,7 @@ INCLUDE_PATH = -I$(VEINS_PROJ)/src -I$(INET_PROJ)/src
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(VEINS_PROJ)/src  -lveins$(D)
+LIBS = $(LDFLAG_LIBPATH)$(INET_PROJ)/src $(LDFLAG_LIBPATH)$(VEINS_PROJ)/src  -lINET$(D) -lveins$(D)
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -45,9 +45,9 @@ MSGFILES = \
 SMFILES =
 
 # Other makefile variables (-K)
+INET_PROJ=../../inet
 VEINS_PROJ=../../veins
 FLOODING_PROJ=..
-INET_PROJ=../../inet
 
 #------------------------------------------------------------------------------
 
@@ -68,10 +68,10 @@ include $(CONFIGFILE)
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 ifneq ($(PLATFORM),win32.x86_64)
-LIBS += -Wl,-rpath,$(abspath $(VEINS_PROJ)/src)
+LIBS += -Wl,-rpath,$(abspath $(INET_PROJ)/src) -Wl,-rpath,$(abspath $(VEINS_PROJ)/src)
 endif
 
-COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DVEINS_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
+COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT -DVEINS_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
 SMCOPTS =
 

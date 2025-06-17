@@ -3,6 +3,8 @@
 	<name>Flooding</name>
 	<comment></comment>
 	<projects>
+		<project>inet</project>
+		<project>SUMO-Manhattan-1km_x_1km</project>
 		<project>veins</project>
 	</projects>
 	<buildSpec>

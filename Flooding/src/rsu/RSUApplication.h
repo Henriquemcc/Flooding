@@ -20,6 +20,8 @@
 #include "../messages/DataMessage_m.h"
 #include "inet/mobility/base/MobilityBase.h"
 #include "../routing/WaveShortMessage_m.h"
+#include "veins/modules/application/ieee80211p/DemoBaseApplLayer.h"
+#include "../routing/Consts80211p.h"
 
 #include <fstream>
 

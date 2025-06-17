@@ -15,9 +15,9 @@
 
 package flooding.routing;
 
-import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
+import org.car2x.veins.modules.application.ieee80211p.DemoBaseApplLayer;
 
-simple Flooding extends BaseWaveApplLayer
+simple Flooding extends DemoBaseApplLayer
 {
     @statistic[lastTxPower](record=mean);
     @statistic[meanSNR](record=mean);

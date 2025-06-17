@@ -19,7 +19,8 @@ import org.car2x.veins.modules.application.ieee80211p.DemoBaseApplLayer;
 
 simple Flooding extends DemoBaseApplLayer
 {
-    @statistic[lastTxPower](record=mean);
+    @statistic[lastTxPower](checkSignals=false);
+    //@statistic[lastTxPower](record=mean);
     @statistic[meanSNR](record=mean);
     @statistic[sentDownMACInCCH](record=sum);
     @statistic[collisions](record=sum);

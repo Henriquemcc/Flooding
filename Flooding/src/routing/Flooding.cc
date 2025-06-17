@@ -301,7 +301,8 @@ Flooding::MessageInfoEntry* Flooding::extractMsgInfo(WaveShortMessage* wsm) {
     info->hops = dataMsg->getHops() + 1;
     info->receptionTime = simTime();
     info->messageLength = wsm->getByteLength();
-    info->distanceToOrigin = info->messageOriginPosition.distance(curPosition);
+    inet::Coord converted = inet::Coord(curPosition.x, curPosition.y, curPosition.z);
+    info->distanceToOrigin = info->messageOriginPosition.distance(converted);
 
     delete dataMsg;
 

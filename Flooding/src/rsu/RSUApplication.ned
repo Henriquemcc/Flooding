@@ -15,12 +15,12 @@
 
 package flooding.rsu;
 
-import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
+import org.car2x.veins.modules.application.ieee80211p.DemoBaseApplLayer;
 
 //
 // TODO auto-generated module
 //
-simple RSUApplication extends BaseWaveApplLayer
+simple RSUApplication extends DemoBaseApplLayer
 {
     parameters:           
         // logging parameters

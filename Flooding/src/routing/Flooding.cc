@@ -222,10 +222,10 @@ WaveShortMessage*  Flooding::prepareWSM(std::string name, int lengthBits, t_chan
     wsm->setSerial(serial);
 
     if (name == "beacon") {
-        DBG << "Creating Beacon with Priority " << priority << " at Applayer at " << wsm->getTimestamp() << std::endl;
+        EV << "Creating Beacon with Priority " << priority << " at Applayer at " << wsm->getTimestamp() << std::endl;
     }
     if (name == "data") {
-        DBG << "Creating Data with Priority " << priority << " at Applayer at " << wsm->getTimestamp() << std::endl;
+        EV << "Creating Data with Priority " << priority << " at Applayer at " << wsm->getTimestamp() << std::endl;
     }
 
     return wsm;

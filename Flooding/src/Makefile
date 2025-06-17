@@ -1,3 +1,15 @@
+DEPS = ../../veins ../../inet
+
+all: deps myproject
+
+deps:
+	@for d in $(DEPS); do \
+		$(MAKE) -C $$d || exit 1; \
+	done
+
+myproject:
+	@$(MAKE) -C src
+
 #
 # OMNeT++/OMNEST Makefile for Flooding
 #

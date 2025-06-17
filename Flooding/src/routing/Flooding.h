@@ -102,7 +102,7 @@ protected:
     virtual void initialize(int stage);
     virtual void finish();
     virtual void handleSelfMsg(cMessage* msg);
-    virtual void onBeacon(veins::BaseFrame1609_4* wsm);
+    virtual void onBeacon(WaveShortMessage* wsm);
     virtual void onData(veins::BaseFrame1609_4* wsm);
     virtual bool isCCHActive();
 

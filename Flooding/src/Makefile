@@ -1,20 +1,8 @@
-DEPS = ../../veins ../../inet
-
-all: deps myproject
-
-deps:
-	@for d in $(DEPS); do \
-		$(MAKE) -C $$d || exit 1; \
-	done
-
-myproject:
-	@$(MAKE) -C src
-
 #
 # OMNeT++/OMNEST Makefile for Flooding
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KVEINS_PROJ=../../veins -KINET_PROJ=../../inet -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -I$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lveins$$\(D\)
+#  opp_makemake -f --deep -o Flooding -I../veins/src -I../inet/src -L../veins/src -lveins -L../inet/src -lINET
 #
 
 # Name of target to be created (-o option)
@@ -32,13 +20,13 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I$(VEINS_PROJ)/src -I$(INET_PROJ)/src
+INCLUDE_PATH = -I../veins/src -I../inet/src
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(VEINS_PROJ)/src  -lveins$(D)
+LIBS = $(LDFLAG_LIBPATH)../veins/src $(LDFLAG_LIBPATH)../inet/src  -lveins -lINET
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -55,10 +43,6 @@ MSGFILES = \
 
 # SM files
 SMFILES =
-
-# Other makefile variables (-K)
-VEINS_PROJ=../../veins
-INET_PROJ=../../inet
 
 #------------------------------------------------------------------------------
 
@@ -79,10 +63,10 @@ include $(CONFIGFILE)
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 ifneq ($(PLATFORM),win32.x86_64)
-LIBS += -Wl,-rpath,$(abspath $(VEINS_PROJ)/src)
+LIBS += -Wl,-rpath,$(abspath ../veins/src) -Wl,-rpath,$(abspath ../inet/src)
 endif
 
-COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DVEINS_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
+COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
 SMCOPTS =
 
@@ -97,8 +81,6 @@ endif
 
 #------------------------------------------------------------------------------
 # User-supplied makefile fragment(s)
--include makefrag
-
 #------------------------------------------------------------------------------
 
 # Main target

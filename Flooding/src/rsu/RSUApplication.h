@@ -19,6 +19,7 @@
 #include "veins/modules/messages/BaseFrame1609_4_m.h"
 #include "../messages/DataMessage_m.h"
 #include "inet/mobility/base/MobilityBase.h"
+#include "../routing/WaveShortMessage_m.h"
 
 #include <fstream>
 

@@ -22,6 +22,7 @@
 #include "../routing/WaveShortMessage_m.h"
 #include "veins/modules/application/ieee80211p/DemoBaseApplLayer.h"
 #include "../routing/Consts80211p.h"
+#include "../routing/WaveShortMessage_m.h"
 
 #include <fstream>
 
@@ -61,6 +62,7 @@ protected:
     virtual void readDataFromFile();
 
     virtual void receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj, cObject* details);
+    virtual WaveShortMessage* prepareWSM(std::string name, int dataLengthBits, t_channel channel, int priority, int rcvId, int serial=0);
 
 public:
     // Signal used to inform vehicles that the dissemination has started. Once a vehicle receives the signal, it

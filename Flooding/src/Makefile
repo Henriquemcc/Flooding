@@ -1,20 +1,8 @@
-DEPS = ../../veins ../../inet
-
-all: deps myproject
-
-deps:
-	@for d in $(DEPS); do \
-		$(MAKE) -C $$d || exit 1; \
-	done
-
-myproject:
-	@$(MAKE) -C src
-
 #
 # OMNeT++/OMNEST Makefile for Flooding
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KVEINS_PROJ=../../veins -KINET_PROJ=../../inet -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -I$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lveins$$\(D\)
+#  opp_makemake -f --deep -KVEINS_PROJ=../../veins -KFLOODING_PROJ=.. -KINET_PROJ=../../inet -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -I$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lveins$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -58,6 +46,7 @@ SMFILES =
 
 # Other makefile variables (-K)
 VEINS_PROJ=../../veins
+FLOODING_PROJ=..
 INET_PROJ=../../inet
 
 #------------------------------------------------------------------------------

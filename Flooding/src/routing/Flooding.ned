@@ -19,10 +19,19 @@ import org.car2x.veins.modules.application.ieee80211p.DemoBaseApplLayer;
 
 simple Flooding extends DemoBaseApplLayer
 {
+    // Desabilitando estatísticas
     @statistic[lastTxPower](checkSignals=false);
     @statistic[meanSNR](checkSignals=false);
     @statistic[sentDownMACInCCH](checkSignals=false);
     @statistic[collisions](checkSignals=false);
+    @statistic[messagesTransmittedSCF](checkSignals=false);
+    @statistic[messagesReceivedSCF](checkSignals=false);
+    @statistic[duplicatedMessages](checkSignals=false);
+    @statistic[messagesTransmitted](checkSignals=false);
+    @statistic[messagesReceived](checkSignals=false);
+    @statistic[isInROI](checkSignals=false);
+    
+    
     //@statistic[lastTxPower](record=mean);
     @statistic[meanSNR](record=mean);
     @statistic[sentDownMACInCCH](record=sum);

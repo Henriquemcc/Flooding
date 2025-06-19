@@ -129,7 +129,8 @@ public:
     //TODO: Added for Game theory Solution
     simsignal_t lastTxPower;
     simsignal_t meanSNR;
-
+    simsignal_t messagesTransmittedSCF;
+    simsignal_t messagesReceivedSCF;
     simsignal_t sentDownMACInCCH; // Indicate the total number of messages sent down to MAC when the CCH was active
     simsignal_t collisions; // Indicate the total number of collisions
     simsignal_t duplicatedMessages; // Indicate the number of duplicate messages received by a vehicle

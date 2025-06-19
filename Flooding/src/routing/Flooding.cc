@@ -44,6 +44,9 @@ void Flooding::initialize(int stage)
         messagesTransmitted = registerSignal("messagesTransmitted");
         messagesReceived = registerSignal("messagesReceived");
         isInROI = registerSignal("isInROI");
+        messagesTransmittedSCF = registerSignal("messagesTransmittedSCF");
+        messagesReceivedSCF = registerSignal("messagesReceivedSCF");
+
 
         wasInROI = false;
         disseminationStarted = false;

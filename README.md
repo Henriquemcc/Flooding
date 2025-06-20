@@ -4,9 +4,10 @@ This is an implementation of the Flooding dissemination protocol for Vehicular A
 
 **Dependencies**
 
-1. OMNeT++ 4.4.2
-2. Veins 4.4
-3. SUMO 0.25.0
+1. Instant Veins 5.2-i1
+2. OMNeT++ 5.7
+3. Veins 5.2
+4. SUMO 1.11.0
 
 **Warning**
 

@@ -19,29 +19,29 @@ import org.car2x.veins.modules.application.ieee80211p.DemoBaseApplLayer;
 
 simple Flooding extends DemoBaseApplLayer
 {
-    // Desabilitando estatísticas
-    @statistic[lastTxPower](checkSignals=false);
-    @statistic[meanSNR](checkSignals=false);
-    @statistic[sentDownMACInCCH](checkSignals=false);
-    @statistic[collisions](checkSignals=false);
-    @statistic[messagesTransmittedSCF](checkSignals=false);
-    @statistic[messagesReceivedSCF](checkSignals=false);
-    @statistic[duplicatedMessages](checkSignals=false);
-    @statistic[messagesTransmitted](checkSignals=false);
-    @statistic[messagesReceived](checkSignals=false);
-    @statistic[isInROI](checkSignals=false);
-    
-    
-    //@statistic[lastTxPower](record=mean);
-    @statistic[meanSNR](record=mean);
-    @statistic[sentDownMACInCCH](record=sum);
-    @statistic[collisions](record=sum);
-    @statistic[messagesTransmittedSCF](record=sum);
-    @statistic[messagesReceivedSCF](record=sum);
-    @statistic[duplicatedMessages](record=sum);
-    @statistic[messagesTransmitted](record=sum);
-    @statistic[messagesReceived](record=sum);
-    @statistic[isInROI](record=sum);
+    parameters:
+    	@signal[mobilityStateChanged](type="long");
+    	@signal[lastTxPower](type="double");
+    	@signal[meanSNR](type="long");
+    	@signal[sentDownMACInCCH](type="long");
+    	@signal[collisions](type="long");
+    	@signal[duplicatedMessages](type="long");
+    	@signal[messagesTransmitted](type="long");
+    	@signal[messagesReceived](type="long");
+    	@signal[isInROI](type="bool");
+    	@signal[messagesTransmittedSCF](type="long");
+    	@signal[messagesReceivedSCF](type="long");
+    	
+        @statistic[lastTxPower](record=mean);
+        @statistic[meanSNR](record=mean);
+        @statistic[sentDownMACInCCH](record=sum);
+        @statistic[collisions](record=sum);
+        @statistic[messagesTransmittedSCF](record=sum);
+        @statistic[messagesReceivedSCF](record=sum);
+        @statistic[duplicatedMessages](record=sum);
+        @statistic[messagesTransmitted](record=sum);
+        @statistic[messagesReceived](record=sum);
+        @statistic[isInROI](record=sum);
     
     // logging parameters
     int log_traffic;
